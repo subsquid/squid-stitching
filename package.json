@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "tsc && node index.js"
+  },
   "name": "graphql-stitching",
   "version": "1.0.0",
   "main": "index.js",

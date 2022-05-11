@@ -1,5 +1,5 @@
-import { introspectSchema } from '@graphql-tools/wrap'
-import { fetch } from 'cross-undici-fetch'
+import { introspectSchema, RenameTypes, RenameRootFields, WrapType } from '@graphql-tools/wrap'
+import { fetch } from 'cross-fetch'
 import { print } from 'graphql'
 import { AsyncExecutor } from '@graphql-tools/utils'
 import { stitchSchemas } from '@graphql-tools/stitch'
@@ -9,39 +9,41 @@ const express = require('express')
 
 const app = express()
 
-const remoteExecutorStm : AsyncExecutor = async ({ document  , variables}) => {
-  const query = print(document)
-  const fetchResult = await fetch('http://localhost/4350/graphql', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query, variables })
-  })
-  return fetchResult.json()
+function makeRmtExecutor(url : string) : AsyncExecutor {
+    return async ({ document  , variables}) => {
+        const query = print(document)
+        const fetchResult = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query, variables })
+        })
+        return fetchResult.json()
+    }
 }
 
-const remoteExecutorClm : AsyncExecutor = async ({ document  , variables}) => {
-    const query = print(document)
-    const fetchResult = await fetch('http://localhost/4351/graphql', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query, variables })
-    })
-    return fetchResult.json()
-  }
+async function createAndTransformSubschema(url :string,prefix: string) {
+    const rmtExecutor = makeRmtExecutor(url)
+    const schema = await introspectSchema(rmtExecutor)
+    const fileds = schema
+    const schemaConfig = {
+        schema: await introspectSchema(rmtExecutor),
+        executor: rmtExecutor,
+        transforms: [
+            //new RenameRootFields((op, name) => `${prefix}_${name}`),
+            new WrapType('Query', `${prefix}Query`, prefix)
+        ]
+    }
+    return schemaConfig
+}
 
 async function getStitchedSchema() {
-    const stmSubschema = {
-        schema: await introspectSchema(remoteExecutorStm),
-        executor: remoteExecutorStm
-    }
     
-    const clmSubschema = {
-        schema: await introspectSchema(remoteExecutorClm),
-        executor: remoteExecutorClm
-    }
 
     const gatewaySchema = stitchSchemas({
-        subschemas: [stmSubschema,clmSubschema],
+        subschemas: [
+            await createAndTransformSubschema('http://localhost:4350/graphql','statemine'),
+            await createAndTransformSubschema('http://localhost:4351/graphql', 'calamari')
+        ],
         mergeTypes: true,
         typeMergingOptions: {
             typeCandidateMerger: (candidates) => candidates[0],

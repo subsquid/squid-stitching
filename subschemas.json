@@ -1,0 +1,11 @@
+[
+    {
+        "name": "kusamaExplorer",
+        "url": "https://app.gc.subsquid.io/beta/kusama-explorer/v1/graphql"
+        
+    },
+    {
+        "name": "polkadotExplorer",
+        "url": "https://app.gc.subsquid.io/beta/polkadot-explorer/v1/graphql"
+    }
+]

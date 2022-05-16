@@ -12,10 +12,10 @@ import path from "path"
 
 export class Endpoint {
   run(): void {
-    this.start().then(
+    const port = Number(process.env.GRAPHQL_PORT) || 4000;
+    this.start(port).then(
       (s) => {
-        console.log(`Squid graphql is running on `);
-        console.log(s.address())
+        console.log(`Squid graphql is running on port ${port}`);
       },
       (err) => {
         console.error(err);
@@ -24,12 +24,10 @@ export class Endpoint {
     );
   }
 
-  async start(): Promise<Server> {
+  async start(port: Number): Promise<Server> {
     const subschemasCfg = this.readSubschemas();
     const gatewaySchema = await this.getStitchedSchema(subschemasCfg);
-    console.dir(gatewaySchema)
     const app = express();
-    const port = Number(process.env.GRAPHQL_PORT) || 4000;
     app.use("/graphql", graphqlHTTP({ schema: gatewaySchema, graphiql: { headerEditorEnabled: true, } }));
     return app.listen(port);
   }
@@ -70,11 +68,11 @@ export class Endpoint {
   private async createAndTransformSubschema({ url, name }: SubschemaConfig) {
     const rmtExecutor = this.makeRmtExecutor(url);
     const subschema = await introspectSchema(rmtExecutor)
-    console.dir(subschema)
+    const queryType = subschema.getQueryType()?.name || 'Query'
     const schemaConfig = {
       schema: subschema,
       executor: rmtExecutor,
-      transforms: [new WrapType("Query", `${name}Query`, name)],
+      transforms: [new WrapType(queryType, `${name}Query`, name)],
     };
     return schemaConfig;
   }

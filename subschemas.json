@@ -2,5 +2,14 @@
     {
         "name": "kusama",
         "url": "https://kusama.indexer.gc.subsquid.io/v4/graphql"
+    },
+    {
+        "name": "kusamaExplorer",
+        "url": "https://app.gc.subsquid.io/beta/kusama-explorer/v1/graphql"
+        
+    },
+    {
+        "name": "polkadotExplorer",
+        "url": "https://app.gc.subsquid.io/beta/polkadot-explorer/v1/graphql"
     }
 ]

@@ -27,6 +27,7 @@ export class Endpoint {
   async start(): Promise<Server> {
     const subschemasCfg = this.readSubschemas();
     const gatewaySchema = await this.getStitchedSchema(subschemasCfg);
+    console.dir(gatewaySchema)
     const app = express();
     const port = Number(process.env.GRAPHQL_PORT) || 4000;
     app.use("/graphql", graphqlHTTP({ schema: gatewaySchema, graphiql: { headerEditorEnabled: true, } }));
@@ -68,8 +69,10 @@ export class Endpoint {
 
   private async createAndTransformSubschema({ url, name }: SubschemaConfig) {
     const rmtExecutor = this.makeRmtExecutor(url);
+    const subschema = await introspectSchema(rmtExecutor)
+    console.dir(subschema)
     const schemaConfig = {
-      schema: await introspectSchema(rmtExecutor),
+      schema: subschema,
       executor: rmtExecutor,
       transforms: [new WrapType("Query", `${name}Query`, name)],
     };

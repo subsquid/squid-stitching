@@ -1,6 +1,7 @@
 import { introspectSchema, WrapType } from "@graphql-tools/wrap";
 import { fetch } from "cross-fetch";
 import { print } from "graphql";
+import cors from "cors";
 import { AsyncExecutor } from "@graphql-tools/utils";
 import { stitchSchemas } from "@graphql-tools/stitch";
 import { graphqlHTTP } from "express-graphql";
@@ -12,7 +13,7 @@ import path from "path"
 
 export class Endpoint {
   run(): void {
-    const port = Number(process.env.GRAPHQL_PORT) || 4000;
+    const port = Number(process.env.GRAPHQL_SERVER_PORT) || 4000;
     this.start(port).then(
       (s) => {
         console.log(`Squid graphql is running on port ${port}`);
@@ -28,7 +29,10 @@ export class Endpoint {
     const subschemasCfg = this.readSubschemas();
     const gatewaySchema = await this.getStitchedSchema(subschemasCfg);
     const app = express();
-    app.use("/graphql", graphqlHTTP({ schema: gatewaySchema, graphiql: { headerEditorEnabled: true, } }));
+    app.use(cors({
+      origin: '*'
+    }))
+    app.use("/graphql", graphqlHTTP({ schema: gatewaySchema, graphiql: { headerEditorEnabled: true },  }));
     return app.listen(port);
   }
 
@@ -51,7 +55,7 @@ export class Endpoint {
       const jsonString = fs.readFileSync(path.resolve(localpath)).toString();
       const subschemas = JSON.parse(jsonString);
       if (
-        !subschemas.every((schema: SubschemaConfig) => 
+        !subschemas.every((schema: SubschemaConfig) =>
           schema.url && schema.name
         )
       ) {

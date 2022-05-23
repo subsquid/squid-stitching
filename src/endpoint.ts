@@ -9,6 +9,9 @@ import { Server } from "http";
 import fs from "fs";
 import { SubschemaConfig } from "./model";
 import path from "path"
+import {setupGraphiqlConsole} from '@subsquid/openreader/dist/server'
+
+
 
 export class Endpoint {
   run(): void {
@@ -28,7 +31,12 @@ export class Endpoint {
     const subschemasCfg = this.readSubschemas();
     const gatewaySchema = await this.getStitchedSchema(subschemasCfg);
     const app = express();
-    app.use("/graphql", graphqlHTTP({ schema: gatewaySchema, graphiql: { headerEditorEnabled: true, } }));
+    app.use("/graphql", graphqlHTTP({ schema: gatewaySchema, graphiql: false  }));
+    app.get('/console', (req, res) => {
+      const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+      res.redirect("https://graphql-console.subsquid.io/?graphql_api="+fullUrl)
+    })
+    //setupGraphiqlConsole(app)
     return app.listen(port);
   }
 

@@ -1,4 +1,4 @@
-import { introspectSchema, WrapType } from "@graphql-tools/wrap";
+import { introspectSchema, WrapType, RenameTypes } from "@graphql-tools/wrap";
 import { fetch } from "cross-fetch";
 import { print } from "graphql";
 import cors from "cors";
@@ -9,10 +9,8 @@ import express from "express";
 import { Server } from "http";
 import fs from "fs";
 import { SubschemaConfig } from "./model";
-import path from "path"
-import {setupGraphiqlConsole} from '@subsquid/openreader/dist/server'
-
-
+import path from "path";
+import { setupGraphiqlConsole } from "@subsquid/openreader/dist/server";
 
 export class Endpoint {
   run(): void {
@@ -32,15 +30,12 @@ export class Endpoint {
     const subschemasCfg = this.readSubschemas();
     const gatewaySchema = await this.getStitchedSchema(subschemasCfg);
     const app = express();
-    app.use(cors({
-      origin: '*'
-    }))
-    app.use("/graphql", graphqlHTTP({ schema: gatewaySchema, graphiql: true  }));
-    // app.get('/console', (req, res) => {
-    //   const fullUrl = req.protocol + '://' + req.get('host') + "/graphql";
-    //   res.redirect("https://graphql-console.subsquid.io/?graphql_api="+encodeURIComponent(fullUrl))
-    // })
-    // //setupGraphiqlConsole(app)
+    app.use(
+      cors({
+        origin: "*",
+      })
+    );
+    app.use("/graphql", graphqlHTTP({ schema: gatewaySchema, graphiql: true }));
     return app.listen(port);
   }
 
@@ -63,8 +58,8 @@ export class Endpoint {
       const jsonString = fs.readFileSync(path.resolve(localpath)).toString();
       const subschemas = JSON.parse(jsonString);
       if (
-        !subschemas.every((schema: SubschemaConfig) =>
-          schema.url && schema.name
+        !subschemas.every(
+          (schema: SubschemaConfig) => schema.url && schema.name
         )
       ) {
         console.error("Wrong subschemas config");
@@ -79,12 +74,18 @@ export class Endpoint {
 
   private async createAndTransformSubschema({ url, name }: SubschemaConfig) {
     const rmtExecutor = this.makeRmtExecutor(url);
-    const subschema = await introspectSchema(rmtExecutor)
-    const queryType = subschema.getQueryType()?.name || 'Query'
+    const subschema = await introspectSchema(rmtExecutor);
+    const queryType = subschema.getQueryType()?.name || "Query";
+    const newQueryName = `${name}Query`;
     const schemaConfig = {
       schema: subschema,
       executor: rmtExecutor,
-      transforms: [new WrapType(queryType, `${name}Query`, name)],
+      transforms: [
+        new WrapType(queryType, newQueryName, name),
+        new RenameTypes((type_) =>
+          type_ === newQueryName ? newQueryName : `${name}_${type_}`
+        )
+      ],
     };
     return schemaConfig;
   }
@@ -96,14 +97,7 @@ export class Endpoint {
           return this.createAndTransformSubschema(subschema);
         })
       ),
-      mergeTypes: true,
-      typeMergingOptions: {
-        typeCandidateMerger: (candidates) => candidates[0],
-        typeDescriptionsMerger: (candidates) => candidates[0].type.description,
-        fieldConfigMerger: (candidates) => candidates[0].fieldConfig,
-        inputFieldConfigMerger: (candidates) => candidates[0].inputFieldConfig,
-        enumValueConfigMerger: (candidates) => candidates[0].enumValueConfig,
-      },
+      mergeTypes: false,
     });
     return gatewaySchema;
   }

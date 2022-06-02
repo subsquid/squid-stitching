@@ -11,6 +11,7 @@
     "@graphql-tools/stitch": "^8.6.9",
     "@graphql-tools/utils": "^8.6.9",
     "@graphql-tools/wrap": "^8.4.16",
+    "@subsquid/cli": "^0.4.1",
     "@subsquid/graphiql-console": "^0.2.0",
     "@subsquid/openreader": "^0.7.0",
     "@types/node": "^17.0.31",

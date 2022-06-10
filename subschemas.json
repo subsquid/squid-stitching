@@ -16,6 +16,10 @@
     "url": "https://app.gc.subsquid.io/beta/moonbeam-explorer/v2/graphql"
   },
   {
+    "name": "moonriver",
+    "url": "https://app.gc.subsquid.io/beta/moonriver-explorer/v2/graphql"
+  },
+  {
     "name": "astar",
     "url": "https://app.gc.subsquid.io/beta/astar-explorer/v2/graphql"
   },

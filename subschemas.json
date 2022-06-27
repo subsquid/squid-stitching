@@ -1,26 +1,9 @@
 [
   {
     "name": "kusama",
-    "url": "https://app.gc.subsquid.io/beta/kusama-explorer/v2/graphql"
-  },
-  {
-    "name": "polkadot",
-    "url": "https://app.gc.subsquid.io/beta/polkadot-explorer/v2/graphql"
-  },
-  {
-    "name": "hydradx",
-    "url": "https://app.gc.subsquid.io/beta/hydradx-explorer/v2/graphql"
-  },
-  {
-    "name": "moonbeam",
-    "url": "https://app.gc.subsquid.io/beta/moonbeam-explorer/v2/graphql"
-  },
-  {
-    "name": "moonriver",
-    "url": "https://app.gc.subsquid.io/beta/moonriver-explorer/v2/graphql"
-  },
-  {
-    "name": "astar",
-    "url": "https://app.gc.subsquid.io/beta/astar-explorer/v2/graphql"
+    "urls": [
+      "https://app.gc.subsquid.io/beta/deepdao-kusama/v4/graphql",
+      "https://app.gc.subsquid.io/beta/kusama-chain-history/v1/graphql"
+    ]
   }
 ]

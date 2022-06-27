@@ -1,2 +1,2 @@
-import { Endpoint } from "./endpoint"
-new Endpoint().run()
+import { Endpoint } from "./endpoint";
+new Endpoint("./subschemas.json").run();

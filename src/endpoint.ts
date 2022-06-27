@@ -1,18 +1,39 @@
-import { introspectSchema, WrapType, RenameTypes } from "@graphql-tools/wrap";
+import {
+  introspectSchema,
+  WrapType,
+  RenameTypes,
+  WrapQuery,
+  WrapFields,
+  RemoveObjectFieldDeprecations,
+} from "@graphql-tools/wrap";
 import { fetch } from "cross-fetch";
 import { print } from "graphql";
 import cors from "cors";
 import { AsyncExecutor } from "@graphql-tools/utils";
-import { stitchSchemas } from "@graphql-tools/stitch";
+import { stitchSchemas, ValidationLevel } from "@graphql-tools/stitch";
 import { graphqlHTTP } from "express-graphql";
 import express from "express";
 import { Server } from "http";
 import fs from "fs";
-import { SubschemaConfig } from "./model";
-import path from "path";
-import { setupGraphiqlConsole } from "@subsquid/openreader/dist/server";
+import { Config, NamespaceConfig } from "./model";
 
 export class Endpoint {
+  private config: Config;
+
+  constructor(path: string) {
+    const jsonString = fs.readFileSync(path).toString();
+    const config = JSON.parse(jsonString);
+    if (!this.isConfigValid(config)) throw new Error("Invalid config");
+
+    this.config = config;
+  }
+
+  private isConfigValid(config: Config) {
+    return config.every(
+      (schema: NamespaceConfig) => schema.urls && schema.name
+    );
+  }
+
   run(): void {
     const port = Number(process.env.GRAPHQL_SERVER_PORT) || 4000;
     this.start(port).then(
@@ -27,8 +48,7 @@ export class Endpoint {
   }
 
   async start(port: Number): Promise<Server> {
-    const subschemasCfg = this.readSubschemas();
-    const gatewaySchema = await this.getStitchedSchema(subschemasCfg);
+    const gatewaySchema = await this.getStitchedSchema(this.config);
     const app = express();
     app.use(
       cors({
@@ -51,52 +71,44 @@ export class Endpoint {
     };
   }
 
-  private readSubschemas(
-    localpath: string = "subschemas.json"
-  ): Array<SubschemaConfig> {
-    try {
-      const jsonString = fs.readFileSync(path.resolve(localpath)).toString();
-      const subschemas = JSON.parse(jsonString);
-      if (
-        !subschemas.every(
-          (schema: SubschemaConfig) => schema.url && schema.name
-        )
-      ) {
-        console.error("Wrong subschemas config");
-        process.exit(1);
-      }
-      return subschemas as Array<SubschemaConfig>;
-    } catch (err) {
-      console.error(err);
-      process.exit(1);
-    }
-  }
+  private async createAndTransformSubschema({ urls, name }: NamespaceConfig) {
+    const subschemas = await Promise.all(
+      urls.map(async (url) => {
+        const rmtExecutor = this.makeRmtExecutor(url);
+        const subschema = await introspectSchema(rmtExecutor);
+        return {
+          schema: subschema,
+          executor: rmtExecutor,
+        };
+      })
+    );
 
-  private async createAndTransformSubschema({ url, name }: SubschemaConfig) {
-    const rmtExecutor = this.makeRmtExecutor(url);
-    const subschema = await introspectSchema(rmtExecutor);
-    const queryType = subschema.getQueryType()?.name || "Query";
+    const queryType = "Query";
     const newQueryName = `${name}Query`;
-    const schemaConfig = {
-      schema: subschema,
-      executor: rmtExecutor,
+
+    return {
+      schema: stitchSchemas({
+        subschemas,
+      }),
       transforms: [
         new WrapType(queryType, newQueryName, name),
         new RenameTypes((type_) =>
           type_ === newQueryName ? newQueryName : `${name}_${type_}`
-        )
+        ),
+        new RemoveObjectFieldDeprecations("Depracated"),
       ],
     };
-    return schemaConfig;
   }
 
-  private async getStitchedSchema(subschemasCfg: Array<SubschemaConfig>) {
+  private async getStitchedSchema(subschemasCfg: Config) {
     const gatewaySchema = stitchSchemas({
-      subschemas: await Promise.all(
-        subschemasCfg.map(async (subschema) => {
-          return this.createAndTransformSubschema(subschema);
-        })
-      ),
+      subschemas: (
+        await Promise.all(
+          subschemasCfg.map(async (subschema) => {
+            return this.createAndTransformSubschema(subschema);
+          })
+        )
+      ).flat(),
       mergeTypes: false,
     });
     return gatewaySchema;

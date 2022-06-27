@@ -18,5 +18,13 @@
   {
     "name": "moonriver",
     "url": "https://app.gc.subsquid.io/beta/moonriver-explorer/firesquid/graphql"
+  },
+  {
+    "name": "acala",
+    "url": "https://app.gc.subsquid.io/beta/acala-explorer/v3/graphql"
+  },
+  {
+    "name": "karura",
+    "url": "https://app.gc.subsquid.io/beta/karura-explorer/v3/graphql"
   }
 ]

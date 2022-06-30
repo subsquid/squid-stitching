@@ -2,8 +2,43 @@
   {
     "name": "kusama",
     "urls": [
-      "https://app.gc.subsquid.io/beta/deepdao-kusama/v4/graphql",
-      "https://app.gc.subsquid.io/beta/kusama-chain-history/v1/graphql"
+      "https://app.gc.subsquid.io/beta/kusama-proposals/v1/graphql",
+      "https://app.gc.subsquid.io/beta/kusama-balances/v1/graphql"
+    ]
+  },
+  {
+    "name": "polkadot",
+    "urls": [
+      "https://app.gc.subsquid.io/beta/polkadot-proposals/v1/graphql",
+      "https://app.gc.subsquid.io/beta/polkadot-balances/v1/graphql"
+    ]
+  },
+  {
+    "name": "moonbeam",
+    "urls": [
+      "https://app.gc.subsquid.io/beta/moonbeam-proposals/v1/graphql",
+      "https://app.gc.subsquid.io/beta/moonbeam-balances/v1/graphql"
+    ]
+  },
+  {
+    "name": "moonriver",
+    "urls": [
+      "https://app.gc.subsquid.io/beta/moonriver-proposals/v1/graphql",
+      "https://app.gc.subsquid.io/beta/moonriver-balances/v1/graphql"
+    ]
+  },
+  {
+    "name": "acala",
+    "urls": [
+      "https://app.gc.subsquid.io/beta/acala-proposals/v1/graphql",
+      "https://app.gc.subsquid.io/beta/acala-balances/v1/graphql"
+    ]
+  },
+  {
+    "name": "karura",
+    "urls": [
+      "https://app.gc.subsquid.io/beta/karura-proposals/v1/graphql",
+      "https://app.gc.subsquid.io/beta/karura-balances/v1/graphql"
     ]
   }
 ]

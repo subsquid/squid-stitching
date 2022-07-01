@@ -40,5 +40,26 @@
       "https://app.gc.subsquid.io/beta/karura-proposals/v1/graphql",
       "https://app.gc.subsquid.io/beta/karura-balances/v1/graphql"
     ]
+  },
+  {
+    "name": "bifrost",
+    "urls": [
+      "https://app.gc.subsquid.io/beta/bifrost-proposals/v1/graphql",
+      "https://app.gc.subsquid.io/beta/bifrost-balances/v1/graphql"
+    ]
+  },
+  {
+    "name": "crust",
+    "urls": [
+      "https://app.gc.subsquid.io/beta/crust-proposals/v1/graphql",
+      "https://app.gc.subsquid.io/beta/crust-balances/v1/graphql"
+    ]
+  },
+  {
+    "name": "hydradx",
+    "urls": [
+      "https://app.gc.subsquid.io/beta/hydradx-proposals/v1/graphql",
+      "https://app.gc.subsquid.io/beta/hydradx-balances/v1/graphql"
+    ]
   }
 ]

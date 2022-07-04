@@ -92,9 +92,9 @@ export class Endpoint {
       }),
       transforms: [
         new WrapType(queryType, newQueryName, name),
-        new RenameTypes((type_) =>
-          type_ === newQueryName ? newQueryName : `${name}_${type_}`
-        ),
+        // new RenameTypes((type_) =>
+        //   type_ === newQueryName ? newQueryName : `${name}_${type_}`
+        // ),
         new RemoveObjectFieldDeprecations("Depracated"),
       ],
     };

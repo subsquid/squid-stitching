@@ -61,5 +61,12 @@
       "https://app.gc.subsquid.io/beta/hydradx-proposals/v1/graphql",
       "https://app.gc.subsquid.io/beta/hydradx-balances/v1/graphql"
     ]
+  },
+  {
+    "name": "phala",
+    "urls": [
+      "https://app.gc.subsquid.io/beta/phala-proposals/v1/graphql",
+      "https://app.gc.subsquid.io/beta/phala-balances/v1/graphql"
+    ]
   }
 ]

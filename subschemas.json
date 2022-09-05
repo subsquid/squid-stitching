@@ -9,10 +9,10 @@
   },
   {
     "name": "moonbeam",
-    "url": "https://app.gc.subsquid.io/beta/moonbeam-explorer/v3/graphql"
+    "url": "https://app.gc.subsquid.io/beta/moonbeam-explorer/firesquid/graphql"
   },
   {
     "name": "moonriver",
-    "url": "https://app.gc.subsquid.io/beta/moonriver-explorer/v3/graphql"
+    "url": "https://app.gc.subsquid.io/beta/moonriver-explorer/firesquid/graphql"
   }
 ]

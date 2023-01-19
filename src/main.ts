@@ -1,2 +1,2 @@
 import { Endpoint } from "./endpoint";
-new Endpoint("./subschemas.json").run();
+new Endpoint("./assets/subschemas.json").run();

@@ -1,0 +1,9 @@
+manifestVersion: subsquid.io/v0.1
+name: deepdao-squid
+version: 1
+description: 'My squid'
+build:
+
+deploy:
+  api:
+    cmd: [ "npm", "run", "start" ]

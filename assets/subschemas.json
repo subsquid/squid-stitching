@@ -3,49 +3,49 @@
     "name": "kusama",
     "urls": [
       "https://app.gc.subsquid.io/beta/kusama-proposals/v1/graphql",
-      "https://app.gc.subsquid.io/beta/kusama-balances/v1/graphql"
+      "https://squid.subsquid.io/kusama-balances/graphql"
     ]
   },
   {
     "name": "polkadot",
     "urls": [
       "https://app.gc.subsquid.io/beta/polkadot-proposals/v1/graphql",
-      "https://app.gc.subsquid.io/beta/polkadot-balances/v1/graphql"
+      "https://squid.subsquid.io/polkadot-balances/graphql"
     ]
   },
   {
     "name": "moonbeam",
     "urls": [
       "https://app.gc.subsquid.io/beta/moonbeam-proposals/v1/graphql",
-      "https://app.gc.subsquid.io/beta/moonbeam-balances/v1/graphql"
+      "https://squid.subsquid.io/moonbeam-balances/graphql"
     ]
   },
   {
     "name": "moonriver",
     "urls": [
       "https://app.gc.subsquid.io/beta/moonriver-proposals/v1/graphql",
-      "https://app.gc.subsquid.io/beta/moonriver-balances/v1/graphql"
+      "https://squid.subsquid.io/moonriver-balances/graphql"
     ]
   },
   {
     "name": "acala",
     "urls": [
       "https://app.gc.subsquid.io/beta/acala-proposals/v1/graphql",
-      "https://app.gc.subsquid.io/beta/acala-balances/v1/graphql"
+      "https://squid.subsquid.io/acala-balances/graphql"
     ]
   },
   {
     "name": "karura",
     "urls": [
       "https://app.gc.subsquid.io/beta/karura-proposals/v1/graphql",
-      "https://app.gc.subsquid.io/beta/karura-balances/v1/graphql"
+      "https://squid.subsquid.io/karura-balances/graphql"
     ]
   },
   {
     "name": "bifrost",
     "urls": [
       "https://app.gc.subsquid.io/beta/bifrost-proposals/v1/graphql",
-      "https://app.gc.subsquid.io/beta/bifrost-balances/v1/graphql"
+      "https://squid.subsquid.io/bifrost-balances/graphql"
     ]
   },
   {
@@ -66,7 +66,7 @@
     "name": "phala",
     "urls": [
       "https://app.gc.subsquid.io/beta/phala-proposals/v1/graphql",
-      "https://app.gc.subsquid.io/beta/phala-balances/v1/graphql"
+      "https://squid.subsquid.io/moonriver-balances/graphql"
     ]
   }
 ]
